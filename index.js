@@ -19,7 +19,7 @@ app.get("/", function(req,res) {
 
 app.get("/links/:hash", function(req,res) {
   //db.link.find
-  res.render("links/show",{taco:req.params.hash})
+  res.render("links/show",{taco: req.headers.host + "/"+req.params.hash})
 })
 
 
@@ -36,6 +36,22 @@ app.post("/links", function(req,res) {
   })
 
 })
+
+app.get("/:hash", function(req,res){
+  db.link.find({where: {hash: req.params.hash}}).then(function(taco){
+    if(!taco){
+      res.send("could not find url");
+    }else{
+      res.redirect('http://'+taco.url)
+    }
+  })
+})
+
+
+
+
+// somehow important, try and figure out why
+// request.headers.host
 
 
 
